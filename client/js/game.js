@@ -321,7 +321,7 @@ createGameByState = function(gameState)
 		statistics.sort(function(a, b) { 
 			return (a.coins > b.coins || a.coins == b.coins && a.regions > b.regions) ? -1 : 1});
 		for (var  i = 0; i < statistics.length; ++i)
-			msg += 'Name: ' + statistics[i]['name'] + ', coins: ' + 
+			msg += 'Name: ' + statistics[i]['username'] + ', coins: ' + 
 				statistics[i]['coins'] + ', regions: ' + statistics[i]['regions'] + '\n';
 		msg += '**************\n';
 		alert(msg);

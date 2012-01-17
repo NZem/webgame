@@ -255,8 +255,9 @@ def act_aiJoin(data):
 		raise BadFieldException('tooManyPlayers')
 	maxPriority = max(game.players, key=lambda x: x.priority).priority if len(game.players) else 0
 	aiCnt = len(filter(lambda x: x.isAI == True, game.players))
-	ai = User('AI%d' % aiCnt, None, True)
-	ai.sid = getSid()
+	sid = getSid()
+	ai = User('AI%d' % sid, None, True)
+	ai.sid = sid
 	ai.gameId = game.id
 	ai.isReady = True
 	ai.priority = maxPriority + 1
