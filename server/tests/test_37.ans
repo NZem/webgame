@@ -1,0 +1,82 @@
+[	
+	{
+		"result": "ok"
+	},{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 1,  "userId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 2,  "userId": 2
+	},
+	{
+		"result": "ok",
+		"gameId": 1
+	},
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"tokenBadgeId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 3], ["Ratmen", 0], ["Heroic", 0]]},
+	{
+		"result": "ok",
+		"tokenBadgeId": 2
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "regionIsImmune"
+	},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 1], ["Wizards", 1], ["Forest", 0]]},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 2], ["Ratmen", 0], ["Heroic", 0]]},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	}
+
+]

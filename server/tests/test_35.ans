@@ -1,0 +1,93 @@
+[	
+	{
+		"result": "ok"
+	},{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 1,  "userId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 2,  "userId": 2
+	},
+	{
+		"result": "ok",
+		"gameId": 1
+	},
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"tokenBadgeId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 2], ["Ratmen", 0], ["Forest", 0]]},
+	{
+		"result": "ok",
+		"tokenBadgeId": 2
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 1], ["Dwarves", 1], ["DragonMaster", 0]]},
+	{
+		"result": "regionIsImmune"
+	},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 1], ["Ratmen", 0], ["Forest", 0]]},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{"result": "ok",
+ "statistics": [["Regions", 2], ["Dwarves", 1], ["DragonMaster", 0]]},
+	{
+		"result": "ok",
+		"tokenBadgeId": 3
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "regionIsImmune"
+	}
+
+]

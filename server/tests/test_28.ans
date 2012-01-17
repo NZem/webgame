@@ -1,0 +1,76 @@
+[	
+	{
+		"result": "ok"
+	},{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 1,  "userId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 2,  "userId": 2
+	},
+	{
+		"result": "ok",
+		"gameId": 1
+	},
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"tokenBadgeId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "badRegion"
+	},
+	{
+		"result": "notEnoughEncampmentsForRedeployment"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"statistics": [["Regions", 3], ["Ratmen", 0], ["Bivouacking", 0]], 
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"tokenBadgeId": 2
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "badTokensNum"
+	},
+	{
+		"result": "badStage"
+	}
+
+]

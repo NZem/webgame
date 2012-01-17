@@ -1,0 +1,109 @@
+[	
+	{
+		"result": "ok"
+	},{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 1,  "userId": 1
+	},
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok",
+		"sid": 2,  "userId": 2
+	},
+	{
+		"result": "ok",
+		"gameId": 1
+	},
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result": "ok"
+	},
+	{
+		"result": "ok"
+	},
+	
+	{
+		"result" : "badStage"
+	},
+	
+	{
+		"result": "badPosition"
+	},
+	
+		
+	{
+		"result": "ok",
+		"tokenBadgeId": 3
+	},
+	
+	
+	{
+		"result" : "badStage"
+	},
+	
+	
+	{
+		"result" : "badStage"
+	},
+	
+		
+	{
+		"result" : "badRegionId"
+	},
+	
+	{
+		"result" : "badRegion"
+	},
+	
+	{
+		"result" : "ok"
+	},
+	
+	{
+		"result" : "badRegion"
+	},
+	
+	{
+		"result" : "ok"
+	},
+
+	{
+		"result" : "ok"
+	},
+	
+	{
+		"result" : "badStage"
+	},
+	
+	{
+		"statistics": 
+		[
+			["Regions", 2], ["Elves", 0], ["Bivouacking", 0]
+		], 
+		"result": "ok"
+	}
+	
+		
+]
+
+
+
+
+
+
+
+
+
+
+
