@@ -207,14 +207,14 @@ class AI(threading.Thread):
 
 		if not self.game:
 			self.game = Game(gameState['gameId'], tokenBadgesInGame, map_, 
-				gameState['lastEvent'] if (gameState['state'] == GAME_START) else gameState['state'],
+				gameState['lastEvent'] if (gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING) else gameState['state'],
 				gameState['currentTurn'], gameState['activePlayerId'], tokenBadges, gameState['players'])
 		else:
 			self.game.visibleTokenBadges = tokenBadges
 			self.game.tokenBadgesInGame = tokenBadgesInGame
 			self.game.players = gameState['players']
 			self.game.activePlayerId = gameState['activePlayerId']
-			self.game.state = gameState['lastEvent'] if gameState['state'] == GAME_START else gameState['state']
+			self.game.state = gameState['lastEvent'] if (gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING) else gameState['state']
 			self.game.turn = gameState['currentTurn']
 		self.game.defendingInfo = gameState['defendingInfo'] if 'defendingInfo' in gameState else None
 		if 'friendsInfo' in gameState and 'friendId' in gameState['friendsInfo'] and\
@@ -293,7 +293,7 @@ class AI(threading.Thread):
 			statistics = sorted(statistics, key = itemgetter('coins', 'regions'), 
 				reverse = True)
 			for stat in statistics:
-				result += 'Name: %s, coins: %d, regions: %d\n' % (stat['name'], 
+				result += 'Name: %s, coins: %d, regions: %d\n' % (stat['username'], 
 					stat['coins'], stat['regions'])
 			result += '**************\n'
 		else:

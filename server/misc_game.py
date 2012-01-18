@@ -280,6 +280,7 @@ def getGameState(game):
 			
 		resPlayers.append(curPlayer)
 	result['players'] = resPlayers
+	result['currentPlayersNum'] = len(resPlayers)
 	result['visibleTokenBadges'] = getVisibleTokenBadges(game.id)
 	return result
 

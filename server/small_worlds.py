@@ -50,4 +50,4 @@ def application(environ, start_response):
 #server.serve_forever()
 
 if __name__ == '__main__':
-    httpserver.serve(application, host='127.0.0.1', port='8080') #'127.0.0.1'
+    httpserver.serve(application, host='0.0.0.0', port='8080') #'127.0.0.1'

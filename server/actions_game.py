@@ -33,6 +33,8 @@ def act_selectRace(data):
 	if not (game and user.inGame): 
 		raise BadFieldException('notInGame')
 	checkStage(GAME_SELECT_RACE, user)
+	if (user.game.state == misc.GAME_START):
+                user.game.state = misc.GAME_PROCESSING
 	chosenBadge = game.getTokenBadge(data['position'])
 	position = chosenBadge.pos
 	tokenBadges = dbi.query(TokenBadge).order_by(TokenBadge.pos).all()
@@ -273,7 +275,7 @@ def act_enchant(data):
 		raise BadFieldException('badStage')
 	checkStage(GAME_CONQUER, user, ATTACK_ENCHANT)
 	reg = user.game.map.getRegion(data['regionId']).getState(user.game.id)
-	#print 'fff', reg.id, reg.tokenBadgeId
+	print 'fff', reg.id, reg.tokenBadgeId
 	if not reg.tokenBadge:
 		raise BadFieldException('nothingToEnchant')
 	victimBadgeId = reg.tokenBadge.id

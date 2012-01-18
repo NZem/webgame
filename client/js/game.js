@@ -405,7 +405,7 @@ createGameByState = function(gameState)
 	if (!Client.currGameState)
 	{
 		result = new Game(gameState.gameId, gameState.gameName, gameState.gameDescription, map, 
-			(gameState.state == GAME_START) ? gameState.lastEvent : gameState.state,
+			(gameState.state == GAME_START || gameState.state == GAME_PROCESSING) ? gameState.lastEvent : gameState.state,
 			gameState.currentTurn, activePlayerIndex, tokenBadges, players, tokenBadgesInGame,
 			gameState.dragonAttacked)
 	}
@@ -416,7 +416,7 @@ createGameByState = function(gameState)
 		game().tokenBadgesInGame = tokenBadgesInGame.copy();
 		game().players = players.copy();
 		game().activePlayerIndex = activePlayerIndex;
-		game().state = gameState.state === GAME_START ? 
+		game().state = (gameState.state === GAME_START || gameState.state == GAME_PROCESSING) ? 
 			gameState.lastEvent : gameState.state;
 		game().turn = gameState.currentTurn;
 		result = Client.currGameState;

@@ -29,5 +29,7 @@
 		$resp .= fgets ($fp,128);
 	$pos = strpos($resp, "{");
 	$resp = substr($resp, $pos);
+	$pos = strrpos($resp, "}");
+	$resp = substr($resp, 0, $pos+1);
 	echo $resp;
 ?>
