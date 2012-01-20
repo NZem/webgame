@@ -305,6 +305,13 @@ def getShortMapState(map_):
 		result[mapAttrNames[i]] = getattr(map_, mapAttrs[i])
 	return result
 
+def StrToArr(coords):
+        st = '{ \"arr\": '
+	st_ = st + coords + '}'
+	js = json.loads(st_)
+	return js['arr']
+        
+
 def getMapState(mapId, gameId = None):
 	map_ = dbi.getXbyY('Map', 'id', mapId)
 	result = getShortMapState(map_)
@@ -315,18 +322,18 @@ def getMapState(mapId, gameId = None):
 		'holeInTheGround', 'encampment', 'dragon', 'fortified', 'inDecline'] #fortified
 	for region in map_.regions:
 		curReg = dict()
-		curReg['raceCoords'] = region.raceCoords
-		curReg['powerCoords'] = region.powerCoords
-		curReg['coordinates'] = region.coordinates
+		curReg['raceCoords'] = StrToArr(region.raceCoords) if region.raceCoords != "None" else None
+		curReg['powerCoords'] = StrToArr(region.powerCoords) if region.powerCoords != "None" else None
+		curReg['coordinates'] = StrToArr(region.coordinates) if region.coordinates != "None" else None
 		curReg['constRegionState'] = list()
 		
 		for i in range(len(constRegionAttrs)):
 			attr = getattr(region, constRegionAttrs[i])
 			if not attr: continue
-			if constRegionAttrs[i] in ('mountain', 'forest', 'hill', 'swamp', 'sea', 'farmland'):
-				curReg['landscape'] = constRegionAttrs[i]
-			elif constRegionAttrs[i] in ('mine', 'cavern', 'magic'):
-				curReg['bonus'] = constRegionAttrs[i]
+			#if constRegionAttrs[i] in ('mountain', 'forest', 'hill', 'swamp', 'sea', 'farmland'):
+			#	curReg['landscape'] = constRegionAttrs[i]
+			#elif constRegionAttrs[i] in ('mine', 'cavern', 'magic'):
+			#	curReg['bonus'] = constRegionAttrs[i]
 			curReg['constRegionState'].append(constRegionAttrs[i])
 			 
 				

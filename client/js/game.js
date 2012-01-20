@@ -45,11 +45,11 @@ Region = $.inherit({
 		this.fortress = fortress; 
 		this.hero = hero;
 		this.inDecline = inDecline;
-		this.raceCoords = parseArray(raceCoords);
-		this.powerCoords = parseArray(powerCoords);
+		this.raceCoords = raceCoords;  //parseArray(raceCoords);
+		this.powerCoords = powerCoords; //parseArray(powerCoords);
 		this.landscape = landscape;
 		this.bonus = bonus;
-		this.coords = toPolygon(parseArray(coords), hratio, vratio);
+		this.coords = coords? toPolygon(coords, hratio, vratio) : null; //toPolygon(parseArray(coords), hratio, vratio);
 	},
 	htmlRegionInfo: function()
 	{
@@ -294,6 +294,15 @@ createMap = function(mapState, hratio, vratio)
 	var regions = [];
 	for (var i = 0; i < mapState.regions.length; ++i)
 	{
+		var constState = mapState.regions[i].constRegionState;
+		var landscape = '';
+		var bonus = '';
+		for (var j=0; j<constState.length; j++)
+			if (constState[j] == 'mine' || constState[j] == 'cavern' || constState[j] == 'magic')
+				bonus = constState[j];
+			else if (constState[j] == 'mountain' || constState[j] == 'forest' || constState[j] == 'hill'
+				|| constState[j] == 'swamp' || constState[j] == 'sea' || constState[j] == 'farmland')
+				landscape = constState[j];
 		var curReg = mapState.regions[i].currentRegionState;
 		regions.push(new Region(i + 1, mapState.regions[i].adjacentRegions, 
 			mapState.regions[i].constRegionState, curReg ? curReg.ownerId : undefined, 
@@ -302,8 +311,7 @@ createMap = function(mapState, hratio, vratio)
 			curReg ? curReg.dragon : undefined, curReg ? curReg.fortress : undefined, 
 			curReg ? curReg.hero : undefined, curReg ? curReg.inDecline : undefined, 
 			mapState.regions[i].raceCoords, mapState.regions[i].powerCoords,
-			mapState.regions[i].coordinates, mapState.regions[i].landscape,
-			mapState.regions[i].bonus, hratio, vratio));
+			mapState.regions[i].coordinates, landscape,	bonus, hratio, vratio));
 	}
 	return new Map(mapState.mapId, mapState.playersNum, mapState.turnsNum, mapState.thumbnail, mapState.picture, 
 		regions);

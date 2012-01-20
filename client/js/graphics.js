@@ -293,7 +293,7 @@ Graphics.getRegLandscape = function(region){
 Graphics.makePreview = function(map, div, width, height){
 	var paper = Raphael(div, width, height),
 		drawRegionThmb = function(region){
-			if (region.coords == '')
+			if (!region.coords)
 				return false;
 			var fillStyle = Graphics.getRegLandscape(region);
 				r = paper.path(getSvgPath(region.coords))
