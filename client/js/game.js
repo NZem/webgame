@@ -339,7 +339,7 @@ createGameByState = function(gameState)
 		conqueredRegion,
 		defendingPlayerIndex,
 		encampmentsRegions = [],
-		victimTokensNum = gameState.defendingInfo && gameState.defendingInfo.tokensNum,
+		victimTokensNum, // = gameState.defendingInfo && gameState.defendingInfo.tokensNum,
 		map;
 	
 	if (!Client.currGameState)
@@ -357,12 +357,13 @@ createGameByState = function(gameState)
 		{
 			for (var j = 0; j < regionFields.length; ++j)
 				game().map.regions[i][regionFields[j]] = mapState.regions[i].currentRegionState[regionFields[j]];
-			if (gameState.defendingInfo && 
-				game().map.regions[i].id === gameState.defendingInfo.regionId)
+			if (gameState.defendingInfo && game().map.regions[i].id === gameState.defendingInfo.regionId)
 				conqueredRegion = game().map.regions[i];
-			
 		}
 	}
+
+
+	
 	var tokenBadges = [], tokenBadge,
 		visibleBadges = gameState.visibleTokenBadges;
 	for (var i = 0; i < visibleBadges.length; ++i)
@@ -403,8 +404,12 @@ createGameByState = function(gameState)
 		if (gameState['friendsInfo'] && gameState['friendsInfo']['friendId'] == player.id)
 			player.friendId = gameState['friendsInfo']['diplomatId']
 		players.push(player);
-		if (gameState.defendingInfo && player.id === gameState.defendingInfo.playerId){
+		if (gameState.defendingInfo && player.id === gameState.defendingInfo.playerId)
+		{
 			defendingPlayerIndex = i;
+			try{
+			victimTokensNum = gameState.players[i].tokensInHand;
+			} catch(e) {alert(e);}
 		}
 	}
 	if (!inGame)

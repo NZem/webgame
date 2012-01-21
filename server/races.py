@@ -104,7 +104,8 @@ class RaceGiants(BaseRace):
 		lands = filter(lambda x: x.region.mountain if hasattr(x, 'region') else x.mountain, 
 					tokenBadge.regions)
 		for  land in lands:
-			if land.region.cavern and tokenBadge.specPowId == 17 and region.cavern:
+                        cav = land.region.cavern if hasattr(land, 'region') else land.cavern
+			if cav and tokenBadge.specPowId == 17 and region.cavern:
 				res = -1
 				break
 			if region.isAdjacent(land.region if hasattr(land, 'region') else land):					
