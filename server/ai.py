@@ -209,14 +209,14 @@ class AI(threading.Thread):
 
 		if not self.game:
 			self.game = Game(gameState['gameId'], tokenBadgesInGame, map_, 
-				gameState['lastEvent'] if gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING else GAME_START,
+				gameState['lastEvent'] if gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING else gameState['state'],
 				gameState['currentTurn'], gameState['activePlayerId'], tokenBadges, gameState['players'])
 		else:
 			self.game.visibleTokenBadges = tokenBadges
 			self.game.tokenBadgesInGame = tokenBadgesInGame
 			self.game.players = gameState['players']
 			self.game.activePlayerId = gameState['activePlayerId']
-			self.game.state = gameState['lastEvent'] if gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING else GAME_START
+			self.game.state = gameState['lastEvent'] if gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING else gameState['state']
 			self.game.turn = gameState['currentTurn']
 		self.game.defendingInfo = gameState['defendingInfo'] if 'defendingInfo' in gameState else None
 		if 'friendsInfo' in gameState and 'friendId' in gameState['friendsInfo'] and\
