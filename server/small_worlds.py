@@ -30,8 +30,9 @@ def application(environ, start_response):
         status = '200 OK'
         headers = [('Content-type', 'text/plain')]
         start_response(status, headers)
-        print "yy"
-        print str(response_body)
+        #print "yy"
+        if len(str(response_body)) < 50:
+            print str(response_body)
         return json.dumps(response_body) #str(response_body)
     else:
         response_body = ''

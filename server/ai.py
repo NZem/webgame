@@ -98,7 +98,7 @@ class TokenBadge:
 		for specPower in races.specialPowerList:
 			if specPower.name == specPowerName:
 				self.specPower = specPower
-				self.specialPowerId = specPower.specialPowerId
+				self.specPowId = specPower.specialPowerId
 				break
 		self.pos = pos
 		self.bonusMoney = bonusMoney
