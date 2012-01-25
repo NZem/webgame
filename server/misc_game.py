@@ -412,3 +412,24 @@ def checkStage(state, user, attackType = None):
 	if badStage or (user.id != game.activePlayerId and state != misc.GAME_DEFEND):
 		raise BadFieldException('badStage')
 
+
+def getNextPlayer(game):
+		activePlayer = dbi.getXbyY('User', 'id', game.activePlayerId)
+		curPlayer = activePlayer
+		while True:
+			nextPlayer = filter(lambda x: x.priority > curPlayer.priority, 
+				game.players)
+			if not len(nextPlayer):
+				break
+			nextPlayer = nextPlayer[0]
+			if not nextPlayer.inGame:
+				nextPlayer += countCoins(nextPlayer)['totalCoinsNum']
+				curPlayer = nextPlayer
+			else:
+				return nextPlayer
+		game.turn += 1
+		if (game.turn == game.map.turnsNum):
+			return game.end(activePlayer.coins)
+		
+		return filter(lambda x: x.priority >= 0 and x.inGame == True, game.players)[0]
+

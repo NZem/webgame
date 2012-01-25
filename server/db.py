@@ -11,6 +11,7 @@ import misc
 import checkFields
 import sys
 import json
+#from misc_game import countCoins
 
 Base = declarative_base()
 
@@ -115,25 +116,25 @@ class Game(Base):
 		else:
 			return self.state
 	
-	def getNextPlayer(self):
-		activePlayer = dbi.getXbyY('User', 'id', self.activePlayerId)
-		curPlayer = activePlayer
-		while True:
-			nextPlayer = filter(lambda x: x.priority > curPlayer.priority, 
-				self.players)
-			if not len(nextPlayer):
-				break
-			nextPlayer = nextPlayer[0]
-			if not nextPlayer.inGame:
-				nextPlayer += countCoins(nextPlayer)['totalCoinsNum']
-				curPlayer = nextPlayer
-			else:
-				return nextPlayer
-		self.turn += 1
-		if (self.turn == self.map.turnsNum):
-			return self.end(activePlayer.coins)
-		
-		return filter(lambda x: x.priority >= 0 and x.inGame == True, self.players)[0]
+	#def getNextPlayer(self):
+	#	activePlayer = dbi.getXbyY('User', 'id', self.activePlayerId)
+	#	curPlayer = activePlayer
+	#	while True:
+	#		nextPlayer = filter(lambda x: x.priority > curPlayer.priority, 
+	#			self.players)
+	#		if not len(nextPlayer):
+	#			break
+	#		nextPlayer = nextPlayer[0]
+	#		if not nextPlayer.inGame:
+	#			nextPlayer += countCoins(nextPlayer)['totalCoinsNum']
+	#			curPlayer = nextPlayer
+	#		else:
+	#			return nextPlayer
+	#	self.turn += 1
+	#	if (self.turn == self.map.turnsNum):
+	#		return self.end(activePlayer.coins)
+	#	
+	#	return filter(lambda x: x.priority >= 0 and x.inGame == True, self.players)[0]
 
 	def end(self, coins):
 		self.state = misc.GAME_ENDED

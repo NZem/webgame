@@ -209,7 +209,7 @@ def act_finishTurn(data):
 	incomeCoins = countCoins(user)
 	user.coins += incomeCoins['totalCoinsNum']
 	user.tokensInHand = 0
-	nextPlayer = game.getNextPlayer()
+	nextPlayer = getNextPlayer(game)
 
 	dbi.updateHistory(user, GAME_FINISH_TURN, None)
 	dbi.updateGameHistory(game, data)
@@ -275,7 +275,7 @@ def act_enchant(data):
 		raise BadFieldException('badStage')
 	checkStage(GAME_CONQUER, user, ATTACK_ENCHANT)
 	reg = user.game.map.getRegion(data['regionId']).getState(user.game.id)
-	print 'fff', reg.id, reg.tokenBadgeId
+	#print 'fff', reg.id, reg.tokenBadgeId
 	if not reg.tokenBadge:
 		raise BadFieldException('nothingToEnchant')
 	victimBadgeId = reg.tokenBadge.id

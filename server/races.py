@@ -1,8 +1,8 @@
-import misc_game
+#import misc_game
 from db import Database, User, Message, Game, Map, Adjacency, RegionState, HistoryEntry, WarHistoryEntry, dbi
 from gameExceptions import BadFieldException
 from checkFields import  checkObjectsListCorrection
-from misc_game import *
+#from misc_game import *
 from misc import *
 from checkFields import *
 
@@ -328,7 +328,14 @@ class SpecialPowerBerserk(BaseSpecialPower):
 		BaseSpecialPower.__init__(self, 'Berserk', 4)
 
 	def throwDice(self, game, dice = None):
-		return misc_game.throwDice(game, dice)
+                if misc.TEST_MODE: 
+                        return dice if dice is not None else 0
+                game.prevGeneratedNum = (misc.A * game.prevGeneratedNum) % misc.M
+                dbi.flush(game)
+                dice = game.prevGeneratedNum % 6
+                if dice > 2: dice = 0
+                return dice
+		#return misc_game.throwDice(game, dice)
 
 	def canThrowDice(self):
 		return True
@@ -405,7 +412,13 @@ class SpecialPowerDragonMaster(BaseSpecialPower):
 		if attackedTokenBadge and attackedTokenBadge.id == tokenBadge.id:
 			raise BadFieldException('badRegion')
 			
-		misc_game.clearFromRace(regState)
+		#misc_game.clearFromRace(regState)
+                if regState.tokenBadge:
+                        race = racesList[regState.tokenBadge.raceId]
+                        race.clearRegion(regState.tokenBadge, regState)
+                        specialPower = specialPowerList[regState.tokenBadge.specialPowerId]
+                        specialPower.clearRegion(regState.tokenBadge, regState)
+		
 		if attackedTokenBadge:
 			racesList[attackedTokenBadge.raceId].sufferCasualties(attackedTokenBadge)
 		else:
