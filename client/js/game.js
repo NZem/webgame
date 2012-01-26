@@ -319,7 +319,7 @@ createMap = function(mapState, hratio, vratio)
 
 createGameByState = function(gameState)
 {
-	if (gameState.ended == true)
+	if (gameState.state == GAME_ENDED)
 	{
 		Client.currGameState = undefined;
 		Client.currentUser.gameId = undefined;

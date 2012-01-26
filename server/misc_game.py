@@ -202,13 +202,13 @@ def getFriendsInfo(game):
 			return {'diplomatId': histEntry[0].userId, 'friendId': histEntry[0].friend} 
 	
 def getGameState(game):
-	if game.state == misc.GAME_ENDED:
-		return {'result': 'ok', 'statistics': json.loads(game.gameHistory[-2].action),'ended': True}
-		
 	gameAttrs = ['id', 'name', 'descr', 'state', 'turn', 'activePlayerId']
 	gameNameAttrs = ['gameId', 'gameName', 'gameDescription', 'state', 
 		'currentTurn', 'activePlayerId']
 	result = dict()
+	if game.state == misc.GAME_ENDED:
+                result['statistics'] = json.loads(game.gameHistory[-2].action)
+
 	if game.history:
 		result['lastEvent'] = game.getLastState()
 		
