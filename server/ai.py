@@ -479,8 +479,8 @@ class AI(threading.Thread):
 		code = codeTable[redplReqName] if redplReqName in codeTable else None
 		if code: req[redplReqName] = {}			
 		for region in regions: 
-			if code == ENCAMPMENTS_CODE:
-				req['encampments'][region.id] = 0
+			#if code == ENCAMPMENTS_CODE:
+			#	req['encampments'][region.id] = 0
 			req['redeployment'][region.id] = 1
 			freeUnits -= 1
 		self.calcDistances(regions)

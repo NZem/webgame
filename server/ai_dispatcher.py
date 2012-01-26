@@ -1,5 +1,6 @@
 import httplib
 import json
+import sys
 
 from ai import AI
 from httplib import HTTPException
@@ -17,10 +18,15 @@ def dispatch(conn, gameId, logFile):
 	userInfo = sendCmd(conn, {'action' : 'aiJoin', 'gameId' : gameId})
 	return AI(url, gameId, userInfo['sid'], userInfo['id'], logFile)
 		
-def main():	
+def main(game=None, num=None):	
 	logFilesCnt = 0
 	try:
 		conn = httplib.HTTPConnection(url)
+		if game:
+                        logFile = open('logs\\ai_results%d.log' % logFilesCnt, 'w')
+			logFilesCnt += 1
+                        for ai in range(num): dispatch(conn, game, logFile)
+                        return
 		while 1:
 			gameList = sendCmd(conn, {'action' : 'getGameList'})['games']
 			for game in gameList:
@@ -35,7 +41,13 @@ def main():
 		conn.close()
 
 if __name__ == "__main__":
-	main()
+        argc = len(sys.argv)
+        if argc > 1:
+                game = int(sys.argv[1])
+                num = int(sys.argv[2])
+                main(game, num)
+        else:
+                main()
 			
 					
 			

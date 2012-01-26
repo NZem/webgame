@@ -31,7 +31,7 @@ def application(environ, start_response):
         headers = [('Content-type', 'text/plain')]
         start_response(status, headers)
         #print "yy"
-        if len(str(response_body)) < 50:
+        if len(str(response_body)) < 100:
             print str(response_body)
         return json.dumps(response_body) #str(response_body)
     else:
