@@ -94,6 +94,47 @@ BODY{
 .Swamp { background: url("images/specialPowers/Swamp.jpg") no-repeat; }
 .Underworld { background: url("images/specialPowers/Underworld.jpg") no-repeat; }
 .Wealthy { background: url("images/specialPowers/Wealthy.jpg") no-repeat; }
+
+
+.dAmazons, .dDwarves, .dElves, .dGiants, .dHalflings, .dHumans, .dOrcs, .dRatmen, .dSkeletons, .dSorcerers,
+.dTritons, .dTrolls, .dWizards, .dAlchemist, .dBerserk, .dBivouacking, .dCommando, .dDiplomat, .dDragonMaster, .dFlying, .dForest, .dFortified, .dHeroic, .dHill, .dMerchant, .dMounted, .dPillaging, .dSeafaring, .dStout, .dSwamp,
+.dUnderworld, .dWealthy {
+	width: 100px;
+	height:100px;
+}
+.dAmazons { background: url("images/races/Amazons decline.jpg") no-repeat; }
+.dDwarves { background: url("images/races/Dwarves decline.jpg") no-repeat; }
+.dElves { background: url("images/races/Elves decline.jpg") no-repeat; }
+.dGiants { background: url("images/races/Giants decline.jpg") no-repeat; }
+.dHalflings { background: url("images/races/Halflings decline.jpg") no-repeat; }
+.dHumans { background: url("images/races/Humans decline.jpg") no-repeat; }
+.dOrcs { background: url("images/races/Orcs decline.jpg") no-repeat; }
+.dRatmen { background: url("images/races/Ratmen decline.jpg") no-repeat; }
+.dSkeletons { background: url("images/races/Skeletons decline.jpg") no-repeat; }
+.dSorcerers { background: url("images/races/Sorcerers decline.jpg") no-repeat; }
+.dTritons { background: url("images/races/Tritons decline.jpg") no-repeat; }
+.dTrolls { background: url("images/races/Trolls decline.jpg") no-repeat; }
+.dWizards { background: url("images/races/Wizards decline.jpg") no-repeat; }
+.dAlchemist { background: url("images/specialPowers/Alchemist decline.jpg") no-repeat; }
+.dBerserk { background: url("images/specialPowers/Berserk decline.jpg") no-repeat; }
+.dBivouacking { background: url("images/specialPowers/Bivouacking decline.jpg") no-repeat; }
+.dCommando { background: url("images/specialPowers/Commando decline.jpg") no-repeat; }
+.dDiplomat { background: url("images/specialPowers/Diplomat decline.jpg") no-repeat; }
+.dDragonMaster { background: url("images/specialPowers/DragonMaster decline.jpg") no-repeat; }
+.dFlying { background: url("images/specialPowers/Flying decline.jpg") no-repeat; }
+.dForest { background: url("images/specialPowers/Forest decline.jpg") no-repeat; }
+.dFortified { background: url("images/specialPowers/Fortified decline.jpg") no-repeat; }
+.dHeroic { background: url("images/specialPowers/Heroic decline.jpg") no-repeat; }
+.dHill { background: url("images/specialPowers/Hill decline.jpg") no-repeat; }
+.dMerchant { background: url("images/specialPowers/Merchant decline.jpg") no-repeat; }
+.dMounted { background: url("images/specialPowers/Mounted decline.jpg") no-repeat; }
+.dPillaging { background: url("images/specialPowers/Pillaging decline.jpg") no-repeat; }
+.dSeafaring { background: url("images/specialPowers/Seafaring.jpg") no-repeat; }
+.dStout { background: url("images/specialPowers/Stout decline.jpg") no-repeat; }
+.dSwamp { background: url("images/specialPowers/Swamp decline.jpg") no-repeat; }
+.dUnderworld { background: url("images/specialPowers/Underworld decline.jpg") no-repeat; }
+.dWealthy { background: url("images/specialPowers/Wealthy decline.jpg") no-repeat; }
+
 .Money {
 	background: url("images/Coins.jpg") no-repeat;
 	width: 50px;

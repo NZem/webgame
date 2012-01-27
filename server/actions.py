@@ -141,9 +141,9 @@ def act_leaveGame(data):
 	dbi.updateGameHistory(game, data)
 	return {'result': 'ok'}
 
-def act_doSmth(data):
-	user = dbi.getXbyY('User', 'sid', data['sid'])
-	return {'result': 'ok'}
+#def act_doSmth(data):
+#	user = dbi.getXbyY('User', 'sid', data['sid'])
+#	return {'result': 'ok'}
 
 def createDefaultMaps():
 	if misc.TEST_MODE:
@@ -194,8 +194,8 @@ def act_loadGame(data):
 		res = doAction(act, False)
 	return {'result': 'ok'}
 
-def act_getMapState(data):
-	return {'result': 'ok', 'mapState': getMapState(data['mapId'])}
+#def act_getMapState(data):
+#	return {'result': 'ok', 'mapState': getMapState(data['mapId'])}
 
 def act_getMapList(data):
 	result = {'result': 'ok'}

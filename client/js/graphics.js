@@ -8,9 +8,9 @@ Graphics.landscapePictures = {
 	"hill" : "url('client/css/images/hill.jpg')",
 	"mountain" : "url('client/css/images/mountain.jpg')",
 	"farmland" : "url('client/css/images/farmland.jpg')",
-	"magic" : "url('client/css/images/magic.jpg')",
-	"cavern" : "url('client/css/images/cavern.jpg')",
-	"mine" : "url('client/css/images/mine.jpg')",
+	"magic" : "url('client/css/images/magic.png')",
+	"cavern" : "url('client/css/images/cavern.png')",
+	"mine" : "url('client/css/images/mine.png')",
 	"natives" : "url('client/css/images/races/elves small.jpg')"
 };
 
@@ -246,6 +246,19 @@ Graphics.drawMap = function(map) {
 					.attr({	stroke : strokeStyle, "stroke-width": 3, 
 					"stroke-linecap": "round"}),
 					attrs = Graphics.getRegColorAndOpacity(region);
+				
+			/*bs_ = paper.rect(region.raceCoords[0], region.raceCoords[1], 50, 50)
+					.attr({fill : "url(client/css/images/races/amazons small.jpg)"});
+			bs_ = paper.rect(region.powerCoords[0], region.powerCoords[1], 50, 50)
+					.attr({fill : "url(client/css/images/coins.jpg)"});*/
+
+			
+			for (var i=0; i<region.bonus.length; i++)
+			try{
+				bonus_ = paper.rect(region.bonusCoords[i][0], region.bonusCoords[i][1], 40, 40)
+					.attr({fill : "url(client/css/images/"+region.bonus[i]+".png)", "stroke": "none"});
+			} catch(e){}
+				
 			region.ui = r;
 			r.model = region;
 			Graphics.drawRegionBadges(region);

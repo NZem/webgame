@@ -325,6 +325,7 @@ def getMapState(mapId, gameId = None):
 		curReg['raceCoords'] = StrToArr(region.raceCoords) if region.raceCoords != "None" else None
 		curReg['powerCoords'] = StrToArr(region.powerCoords) if region.powerCoords != "None" else None
 		curReg['coordinates'] = StrToArr(region.coordinates) if region.coordinates != "None" else None
+		curReg['bonusCoords'] = StrToArr(region.bonusCoords) if region.bonusCoords != "None" else None
 		curReg['constRegionState'] = list()
 		
 		for i in range(len(constRegionAttrs)):

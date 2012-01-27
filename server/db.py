@@ -257,19 +257,21 @@ class Region(Base):
 	raceCoords = Column(String)
 	powerCoords = Column(String)
 	coordinates = Column(String)
+	bonusCoords = Column(String)
 	map = relationship(Map, backref=backref('regions', order_by=id))
 	neighbors = relationship('Adjacency' , cascade="all,delete", 
 		primaryjoin='and_(Region.id==Adjacency.regId,\
 		Region.mapId==Adjacency.mapId)')
 		
 
-	def __init__(self, id, defTokensNum, map_, raceCoords, powerCoords, coordinates): 
+	def __init__(self, id, defTokensNum, map_, raceCoords, powerCoords, coordinates, bonusCoords): 
 		self.id = id
 		self.defTokensNum = defTokensNum
 		self.map = map_
 		self.raceCoords = str(raceCoords)
 		self.powerCoords = str(powerCoords)
 		self.coordinates = str(coordinates)
+		self.bonusCoords = str(bonusCoords)
 
 	def isCoast(self):
 		cnt = 0
@@ -507,7 +509,8 @@ class Database:
 		reg = Region(id, regInfo['population'], map_, 
 			regInfo['raceCoords'] if 'raceCoords' in regInfo else None, 
 			regInfo['powerCoords'] if 'powerCoords' in regInfo else None,
-			regInfo['coordinates'] if 'coordinates' in regInfo else None)
+			regInfo['coordinates'] if 'coordinates' in regInfo else None,
+                        regInfo['bonusCoords'] if 'bonusCoords' in regInfo else None)
 		if 'landDescription' in regInfo:
 			for descr in regInfo['landDescription']:
 				if not descr in misc.possibleLandDescription[:11]:

@@ -31,7 +31,7 @@ possiblePrevCmd[GAME_CHOOSE_FRIEND] = [GAME_REDEPLOY];
 Region = $.inherit({
 	__constructor: function(id, adjacent, props, ownerId, tokenBadgeId, tokensNum, holeInTheGround,
 		encampment, dragon, fortress, hero, inDecline, raceCoords, powerCoords, coords, 
-		landscape, bonus, hratio, vratio)
+		landscape, bonus, hratio, vratio, bonusCoords)
 	{
 		this.id = id;							
 		this.adjacent = adjacent.copy();
@@ -50,6 +50,7 @@ Region = $.inherit({
 		this.landscape = landscape;
 		this.bonus = bonus;
 		this.coords = coords? toPolygon(coords, hratio, vratio) : null; //toPolygon(parseArray(coords), hratio, vratio);
+		this.bonusCoords = bonusCoords;
 	},
 	htmlRegionInfo: function()
 	{
@@ -296,10 +297,10 @@ createMap = function(mapState, hratio, vratio)
 	{
 		var constState = mapState.regions[i].constRegionState;
 		var landscape = '';
-		var bonus = '';
+		var bonus = [];
 		for (var j=0; j<constState.length; j++)
 			if (constState[j] == 'mine' || constState[j] == 'cavern' || constState[j] == 'magic')
-				bonus = constState[j];
+				bonus.push(constState[j]);
 			else if (constState[j] == 'mountain' || constState[j] == 'forest' || constState[j] == 'hill'
 				|| constState[j] == 'swamp' || constState[j] == 'sea' || constState[j] == 'farmland')
 				landscape = constState[j];
@@ -311,7 +312,8 @@ createMap = function(mapState, hratio, vratio)
 			curReg ? curReg.dragon : undefined, curReg ? curReg.fortress : undefined, 
 			curReg ? curReg.hero : undefined, curReg ? curReg.inDecline : undefined, 
 			mapState.regions[i].raceCoords, mapState.regions[i].powerCoords,
-			mapState.regions[i].coordinates, landscape,	bonus, hratio, vratio));
+			mapState.regions[i].coordinates, landscape,	bonus, hratio, vratio,
+			mapState.regions[i].bonusCoords));
 	}
 	return new Map(mapState.mapId, mapState.playersNum, mapState.turnsNum, mapState.thumbnail, mapState.picture, 
 		regions);
@@ -352,11 +354,12 @@ createGameByState = function(gameState)
 	else
 	{
 		var regionFields = ['ownerId','tokenBadgeId', 'tokensNum', 'holeInTheGround', 'encampment',
-			'dragon', 'fortified', 'hero', 'inDecline'] //fortress
+			'dragon', 'hero', 'inDecline'] 
 		for (var i = 0; i < mapState.regions.length; ++i)
 		{
 			for (var j = 0; j < regionFields.length; ++j)
 				game().map.regions[i][regionFields[j]] = mapState.regions[i].currentRegionState[regionFields[j]];
+			game().map.regions[i]['fortress'] = mapState.regions[i].currentRegionState['fortified'];
 			if (gameState.defendingInfo && game().map.regions[i].id === gameState.defendingInfo.regionId)
 				conqueredRegion = game().map.regions[i];
 		}
@@ -447,7 +450,8 @@ createGameByState = function(gameState)
 			
 	} else if (!(game() && game().redeployStarted && game().defendStarted))
 		user().freeTokens = user().tokensInHand;
-	$('#turn').html('Turn: ' + result.turn);
+	turn_ = result.turn + 1;
+	$('#turn').html('Turn: ' + turn_);
 	return result;
 };
 
