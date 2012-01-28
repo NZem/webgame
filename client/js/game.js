@@ -34,7 +34,7 @@ Region = $.inherit({
 		landscape, bonus, hratio, vratio, bonusCoords)
 	{
 		this.id = id;							
-		this.adjacent = adjacent.copy();
+		this.adjacent = adjacent ? adjacent.copy() : adjacent;
 		this.props = props.copy();
 		this.ownerId = ownerId;
 		this.tokenBadgeId = tokenBadgeId;
@@ -237,7 +237,6 @@ User = $.inherit({
 	},
 	startRedeploy: function()
 	{
-
 		var regions = this.currentTokenBadge.regions(),
 			specPower = this.specPower(),
 			init = function(elt, obj){	
@@ -267,7 +266,6 @@ User = $.inherit({
 		if (this.race().deleteAdditionalUnits)
 			this.race().deleteAdditionalUnits();
 		Graphics.drawFreeBadges();
-		
 	},
 
 	specPower : function()
@@ -343,14 +341,30 @@ createGameByState = function(gameState)
 		encampmentsRegions = [],
 		victimTokensNum, // = gameState.defendingInfo && gameState.defendingInfo.tokensNum,
 		map;
-	
+
 	if (!Client.currGameState)
 	{
+		var id = mapState.mapId;
+		var currMap;
+		for (var i=0; i<Client.mapList.length; i++)
+		{
+			if (id == Client.mapList[i].mapId)
+			{
+				currMap = Client.mapList[i];
+				break;
+			}
+		}
+		var regionFields = ['coordinates','raceCoords', 'powerCoords', 'bonusCoords'];
+		for (var i = 0; i < mapState.regions.length; i++)
+		{
+			for (var j = 0; j < regionFields.length; j++)
+				mapState.regions[i][regionFields[j]] = currMap.regions[i][regionFields[j]];
+		}
 		map = createMap(mapState);
 		for (var i = 0; i < mapState.regions.length; ++i)
 			if (gameState.defendingInfo && i + 1 == gameState.defendingInfo.regionId)
 				conqueredRegion = map.regions[i];
-		}
+	}
 	else
 	{
 		var regionFields = ['ownerId','tokenBadgeId', 'tokensNum', 'holeInTheGround', 'encampment',

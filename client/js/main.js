@@ -110,6 +110,7 @@ $(function() {
 	$('#login').show();
 	$('#refreshChat').show();
 	$('#tabs').show();
+	updateMapList(false);
 	/*sendQuery({'action': 'login', 'username': 'user', 'password': '123456'},
 			loginResponse, false, true);*/
 });

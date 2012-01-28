@@ -387,7 +387,7 @@ class AI(threading.Thread):
 		self.calcDistances(regions)
 		if self.currentTokenBadge and len(self.currentTokenBadge.getRegions()) and\
 				not len(filter(lambda x : x.distFromEnemy < 2, self.currentTokenBadge.getRegions())):
-			chosenRegion = min(regions, key=lambda x: calcRegPrior(x) - int(x.tokenBadgeId or 0))
+			chosenRegion = min(regions, key=lambda x: calcRegPrior(x) - int(x.tokenBadgeId or 0)) 
 		else:
 			farawayRegs = filter(lambda x: x.distFromEnemy > 2, regions)
 			chosenRegion = min(farawayRegs if len(farawayRegs) else regions, key=calcRegPrior)
@@ -474,13 +474,15 @@ class AI(threading.Thread):
 		regions = self.currentTokenBadge.getRegions()
 		tokenBadge = self.currentTokenBadge
 		freeUnits = tokenBadge.totalTokensNum + tokenBadge.race.turnEndReinforcements(self)
+		print tokenBadge.totalTokensNum
+		print freeUnits
 		req = {'redeployment' : {}}
 		redplReqName = tokenBadge.specPower.redeployReqName
 		code = codeTable[redplReqName] if redplReqName in codeTable else None
 		if code: req[redplReqName] = {}			
 		for region in regions: 
-			#if code == ENCAMPMENTS_CODE:
-			#	req['encampments'][region.id] = 0
+			if code == ENCAMPMENTS_CODE:
+				req['encampments'][region.id] = 0
 			req['redeployment'][region.id] = 1
 			freeUnits -= 1
 		self.calcDistances(regions)
@@ -513,7 +515,52 @@ class AI(threading.Thread):
 			cmd[redplReqName] = convertRedeploymentRequest(req[redplReqName], code)
 		data = self.sendCmd(cmd)
 		if data['result'] != 'ok':
-			raise BadFieldException('unknown error in redeploy %s' % data['result'])
+                        if data['result'] == 'notEnoughTokensForRedeployment':
+                                regions = self.currentTokenBadge.getRegions()
+                                tokenBadge = self.currentTokenBadge
+                                freeUnits = tokenBadge.totalTokensNum + tokenBadge.race.turnEndReinforcements(self) - 4
+                                print tokenBadge.totalTokensNum
+                                print freeUnits
+                                req = {'redeployment' : {}}
+                                redplReqName = tokenBadge.specPower.redeployReqName
+                                code = codeTable[redplReqName] if redplReqName in codeTable else None
+                                if code: req[redplReqName] = {}			
+                                for region in regions: 
+                                        if code == ENCAMPMENTS_CODE:
+                                                req['encampments'][region.id] = 0
+                                        req['redeployment'][region.id] = 1
+                                        freeUnits -= 1
+                                self.calcDistances(regions)
+                                if code == HERO_CODE:
+                                        n = 2
+                                        for reg in sorted(regions, key=lambda x: x.needDef):
+                                                req['heroes'][reg.id] = 1
+                                                n -= 1
+                                                reg.needDef = 1
+                                                if not n: break
+                                elif code == FORTRESS_CODE and len(filter(lambda x: x.fortress, regions)) < 6:
+                                        maxNeedDef = 0
+                                        reg = None
+                                        for region in regions:
+                                                if region.needDef > maxNeedDef and not region.fortress:
+                                                        reg = region
+                                                        maxNeedDef = region.needDef
+                                        if reg:
+                                                req['fortified'][reg.id] = 1
+                                                reg.needDef = 1
+                                stratRegions = filter(lambda x : x.needDef > 1, regions)
+                                if len(stratRegions) > 2: regions = stratRegions
+                                if freeUnits:
+                                        distributeUnits(regions, freeUnits, req['redeployment'])
+                                if code == ENCAMPMENTS_CODE:
+                                        distributeUnits(regions, 5, req['encampments'])
+                                redeployRequest = convertRedeploymentRequest(req['redeployment'], REDEPLOYMENT_CODE)
+                                cmd = {'action': 'redeploy', 'sid': self.sid, 'regions': redeployRequest}
+                                if code: 
+                                        cmd[redplReqName] = convertRedeploymentRequest(req[redplReqName], code)
+                                data = self.sendCmd(cmd)
+                        else:
+                                raise BadFieldException('unknown error in redeploy %s' % data['result'])
 
 	def getNextAct(self):
 		defendingPlayer = self.game.defendingInfo['playerId'] if self.game.defendingInfo else None

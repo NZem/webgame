@@ -37,7 +37,11 @@ def convertRedeploymentRequest(req, code):
 	}[code]
 	res = []
 	for rec in req.items():
-		res.append(nextRecMaker(rec))
+                if code == ENCAMPMENTS_CODE:
+                        if rec[1] != 0:
+                                res.append(nextRecMaker(rec))
+                else:
+                        res.append(nextRecMaker(rec))
 	return res[0] if code == FORTRESS_CODE else res
 		
 	

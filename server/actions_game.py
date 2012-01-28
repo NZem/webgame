@@ -50,7 +50,7 @@ def act_selectRace(data):
 	user.tokensInHand = tokensNum + addUnits
 	chosenBadge.inDecline = False
 	chosenBadge.bonusMoney = 0
-	chosenBadge.totalTokensNum = tokensNum
+	chosenBadge.totalTokensNum = tokensNum #+ addUnits
 	chosenBadge.specPowNum = races.specialPowerList[specialPowerId].bonusNum
 	chosenBadge.pos = None
 	dbi.flush(chosenBadge)

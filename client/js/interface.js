@@ -377,8 +377,8 @@ Interface.fillGameList = function(games)
 		delete Client.currentUser.gameIndex;
 	var lastSortIndex = 0;
 	for (var i = 0; i < Client.gameList.length; ++i)
-	{
-		/*if (Client.currentUser)
+	{ ///////////////////////////////////////////////////////////////////////////////
+		if (Client.currentUser)
 		{
 			for (var j = 0; j < Client.gameList[i].players.length; ++j)
 				if (Client.gameList[i].players[j].userId === 
@@ -395,7 +395,7 @@ Interface.fillGameList = function(games)
 				Interface.createGameTab();
 				break;
 			}
-		}*/
+		} ///////////////////////////////////////////////////////////////////////////
 		while ((lastSortIndex < showingGames.length) && 
 			(showingGames[lastSortIndex] < Client.gameList[i].gameId))
 			++lastSortIndex;

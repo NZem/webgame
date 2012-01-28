@@ -161,6 +161,9 @@ class RaceAmazons(BaseRace):
 	def turnStartReinforcements(self):
 		return 4
 
+	#def turnEndReinforcements(self, user):
+	#	return -4
+
 	def needRedeployment(self):
 		return True
 	
