@@ -424,9 +424,7 @@ createGameByState = function(gameState)
 		if (gameState.defendingInfo && player.id === gameState.defendingInfo.playerId)
 		{
 			defendingPlayerIndex = i;
-			try{
 			victimTokensNum = gameState.players[i].tokensInHand;
-			} catch(e) {alert(e);}
 		}
 	}
 	if (!inGame)

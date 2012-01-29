@@ -69,7 +69,7 @@ class Game:
 		
 	def checkStage(self, state, ai, attackType = None):
 		lastEvent = self.state
-		badStage = not (lastEvent in possiblePrevCmd[state]) 
+		badStage = not (lastEvent in possiblePrevCmd[state])
 		if attackType:
 			badStage = badStage and ai.badAttack(attackType)
 		return not badStage
@@ -110,8 +110,6 @@ class TokenBadge:
 	def getRegions(self, defReg = None):
 		return filter(lambda x: x.tokenBadgeId == self.id and (not defReg or not x.isAdjacent(defReg)),
 			self.game.map.regions)
-		#return filter(lambda x: x.ownerId == self.owner and (not defReg or not x.isAdjacent(defReg)),
-		#	self.game.map.regions)
 		
 	def isNeighbor(self, region):
 		return len(filter(lambda x: x.isAdjacent(region), self.getRegions())) > 0
@@ -149,6 +147,7 @@ class AI(threading.Thread):
 		self.dragonUsed = False #regions
 		self.enchantUsed = False
 		self.friendId = None
+		self.masterId = None
 		self.sid = sid
 		self.id = id
 		self.logFile = logFile
@@ -226,7 +225,7 @@ class AI(threading.Thread):
 			self.game.turn = gameState['currentTurn']
 		self.game.defendingInfo = gameState['defendingInfo'] if 'defendingInfo' in gameState else None
 		if 'friendsInfo' in gameState and 'friendId' in gameState['friendsInfo'] and\
-				gameState['friendsInfo']['friendId']== self.id:
+				gameState['friendsInfo']['friendId'] == self.id:
 				self.masterId = gameState['friendsInfo']['diplomatId']
 		else:
 			self.masterId = None 
@@ -236,8 +235,9 @@ class AI(threading.Thread):
 			
 	def selectRace(self):
 		visibleBadges = self.game.visibleTokenBadges
+		usefulSkills = lambda x: 5 if x.specPower.name == 'Merchant' or x.specPower.name == 'Commando' or x.specPower.name == 'Wealthy' or x.race.name == 'Amazons' else 0
 		chosenBadge = max(filter(lambda x: self.coins >= x.pos, visibleBadges), 
-				key=lambda x: x.characteristic())
+				key=lambda x: x.characteristic() + usefulSkills(x) - x.pos)
 		result = self.sendCmd({'action': 'selectRace', 'sid': self.sid, 'position': chosenBadge.pos})
 		if result['result'] != 'ok':
 			raise BadFieldException('unknown error in select race %s' % result['result'])
@@ -262,11 +262,11 @@ class AI(threading.Thread):
 		
 		
 	def shouldDecline(self):
-		tBadge = self.currentTokenBadge
+		tBadge = self.currentTokenBadge   
 		return tBadge and tBadge.specPower.canDecline(self, False) and\
 			self.game.checkStage(GAME_DECLINE, self) and\
 				(not len (self.getConquerableRegions()) or\
-				tBadge.totalTokensNum - len(tBadge.getRegions()) < 4)
+				tBadge.totalTokensNum - len(tBadge.getRegions()) < 5)
 				
 
 	def decline(self):
@@ -284,7 +284,7 @@ class AI(threading.Thread):
                         self.enchantUsed = True
 
 	def dragonAttack(self):
-		region = max(self.conquerableRegions, key=lambda x: x.tokensNum)
+		region = max(self.conquerableRegions, key=lambda x: self.getRegionPrice(x))   # x.tokensNum
 		data = self.sendCmd({'action': 'dragonAttack', 'sid': self.sid, 'regionId': region.id})
 		if data['result'] != 'ok':
                         self.game.unsuccess = True
@@ -398,21 +398,33 @@ class AI(threading.Thread):
 		if not len(regions):
                       self.game.unsuccess = True
                       return
-		calcRegPrior = lambda x: self.getRegionPrice(x) + 5*(x.ownerId == self.id) - self.currentTokenBadge.regBonus(x)
-		self.calcDistances(regions)
-		if self.currentTokenBadge and len(self.currentTokenBadge.getRegions()) and\
+		calcRegPrior = lambda x: self.getRegionPrice(x) + 5*(x.ownerId == self.id) - 3*self.currentTokenBadge.regBonus(x)
+		self.calcDistances(regions, True)
+		race = self.currentTokenBadge.race.name
+                specPow = self.currentTokenBadge.specPower.name
+		if len(self.currentTokenBadge.getRegions()) and\
 				not len(filter(lambda x : x.distFromEnemy < 2, self.currentTokenBadge.getRegions())):
-			chosenRegion = min(regions, key=lambda x: calcRegPrior(x) - int(x.tokenBadgeId or 0)) 
+			chosenRegion = min(regions, key=lambda x: calcRegPrior(x))  # - int(x.tokenBadgeId or 0)
+		elif len(filter(lambda x : x.distFromEnemy < 2, self.currentTokenBadge.getRegions())):
+                        if (race == 'Skeletons' or race == 'Orcs' or specPow == 'Pillaging'):
+                                needToAttackEnemy = lambda x: 3 if x.tokenBadgeId else 0
+                        else:
+                                needToAttackEnemy = lambda x: 1 if x.tokenBadgeId else 0
+                        chosenRegion = min(regions, key=lambda x: calcRegPrior(x) - needToAttackEnemy(x))
 		else:
 			farawayRegs = filter(lambda x: x.distFromEnemy > 2, regions)
-			chosenRegion = min(farawayRegs if len(farawayRegs) else regions, key=calcRegPrior)
+			if (specPow == 'Seafaring'):
+                                special = lambda x: 1 if x.sea else 0
+                        elif (specPow == 'Underworld'):
+                                special = lambda x: 1 if x.cavern else 0
+                        else:
+                                special = lambda x: 0
+			chosenRegion = min(farawayRegs if len(farawayRegs) else regions, key = lambda x: calcRegPrior(x) - special(x))
 		conqdReg = copy(chosenRegion)
 		conqdReg.nonEmpty = chosenRegion.tokensNum > 0
 		if self.canThrowDice(): self.sendCmd({'action': 'throwDice', 'sid': self.sid})
 		data = self.sendCmd({'action': 'conquer', 'sid': self.sid, 'regionId': chosenRegion.id})
 		ok = data['result'] == 'ok'
-		#print chosenRegion.id
-		#print data['result']
 		if data['result'] == 'badTokensNum':
                         self.game.unsuccess = True
 		if not(ok or data['result'] == 'badTokensNum'):
@@ -441,13 +453,13 @@ class AI(threading.Thread):
 			'currentTokenBadge' in mdPlayer and\
 			mdPlayer['currentTokenBadge']['raceName' if race else 'specialPowerName'] == abilityName
 					
-	def calcDistances(self, regions):
+	def calcDistances(self, regions, forConquer=False):
 		dangerous = lambda x: x.ownerId and not x.inDecline and x.ownerId not in (self.id, self.friendId)
 		invaders = self.invadersExist()
 		mdPlayer = self.mostDangerousPlayer()
-		hobbitsAreEnemies =  self.needDefendAgainst(mdPlayer, 'Hobbits', True)
+		hobbitsAreEnemies =  self.needDefendAgainst(mdPlayer, 'Halflings', True)
 		for region in regions:
-			if invaders and (region.border or hobbitsAreEnemies):
+			if not forConquer and invaders and (region.border or hobbitsAreEnemies):
 				region.distFromEnemy = 1
 				continue
 			for reg in self.game.map.regions: reg.d = 0
@@ -460,7 +472,10 @@ class AI(threading.Thread):
 				cur = q.get()
 				for reg in cur.adjacent:
 					if reg.d: continue
-					if reg.ownerId and not reg.inDecline and reg.ownerId != self.id:
+					owned = reg.ownerId and reg.ownerId != self.id
+					if not forConquer:
+                                                owned = owned and not reg.inDecline
+					if owned:
 						stop = True
 						break
 					reg.d = cur.d + 1
@@ -499,11 +514,11 @@ class AI(threading.Thread):
                                 raise BadFieldException('unknown error in redeploy %s' % data['result'])
                        return
 		tokenBadge = self.currentTokenBadge
-		#print tokenBadge.totalTokensNum
+		print tokenBadge.totalTokensNum
 		if self.game.getLastState() != GAME_UNSUCCESSFULL_CONQUER and not self.game.unsuccess:
                         tokenBadge.totalTokensNum += tokenBadge.race.turnEndReinforcements(self)
                 freeUnits = tokenBadge.totalTokensNum                       
-		#print freeUnits
+		print freeUnits
 		req = {'redeployment' : {}}
 		redplReqName = tokenBadge.specPower.redeployReqName
 		code = codeTable[redplReqName] if redplReqName in codeTable else None
