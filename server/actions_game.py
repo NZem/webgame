@@ -107,7 +107,7 @@ def act_conquer(data):
 	unitPrice = max(unitPrice, 1)
 	if unitsNum < unitPrice:
 		dbi.updateHistory(user, GAME_UNSUCCESSFULL_CONQUER, user.currentTokenBadge.id)
-		tokenBadge.totalTokensNum += callRaceMethod(tokenBadge.raceId, 'turnEndReinforcements')
+		tokenBadge.totalTokensNum += callRaceMethod(tokenBadge.raceId, 'turnEndReinforcements', user)
 		return {'result': 'badTokensNum', 'dice': dice}
 	clearFromRace(regState)					# Not sure if it's necessary
 	victimBadgeId = regState.tokenBadgeId

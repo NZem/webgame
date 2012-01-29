@@ -405,7 +405,8 @@ class AI(threading.Thread):
 		if data['result'] == 'badTokensNum':
                         self.game.unsuccess = True
 		if not(ok or data['result'] == 'badTokensNum'):
-				raise BadFieldException('unknown error in conquer: %s' % data['result'])
+                        self.game.unsuccess = True
+				#raise BadFieldException('unknown error in conquer: %s' % data['result'])
 		if ok: self.conqueredRegions.append(conqdReg)
 
 	def invadersExist(self):
