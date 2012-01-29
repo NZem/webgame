@@ -325,12 +325,12 @@ createGameByState = function(gameState)
 		Client.currentUser.gameId = undefined;
 		Interface.changeOnLeave();
 		msg = '***FINISH GAME***\n';
-		statistics = gameState['statistics'];
+		statistics = gameState.players; //gameState['statistics'];
 		statistics.sort(function(a, b) { 
-			return (a.coins > b.coins || a.coins == b.coins && a.regions > b.regions) ? -1 : 1});
+			return (a.coins > b.coins) ? -1 : 1}); // || a.coins == b.coins && a.regions > b.regions
 		for (var  i = 0; i < statistics.length; ++i)
 			msg += 'Name: ' + statistics[i]['username'] + ', coins: ' + 
-				statistics[i]['coins'] + ', regions: ' + statistics[i]['regions'] + '\n';
+				statistics[i]['coins'] +  '\n'; // ', regions: ' + statistics[i]['regions'] +
 		msg += '**************\n';
 		alert(msg);
 		return;

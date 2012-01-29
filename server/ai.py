@@ -65,6 +65,7 @@ class Game:
 		self.activePlayerId = activePlayerId
 		self.visibleTokenBadges = visibleTokenBadges
 		self.players = players
+		self.unsuccess = False
 		
 	def checkStage(self, state, ai, attackType = None):
 		lastEvent = self.state
@@ -181,7 +182,10 @@ class AI(threading.Thread):
 				if 'currentRegionState' in data['gameState']['map']['regions'][i]:
 					curState = data['gameState']['map']['regions'][i]['currentRegionState']
 					for field in currentRegionFields:
-						setattr(region, field, curState[field] if field in curState else None)
+                                                if field == 'fortified':
+                                                        setattr(region, 'fortress', curState['fortified'])
+                                                else:
+                                                        setattr(region, field, curState[field] if field in curState else None)
 		tokenBadges = list()
 		visibleBadges = gameState['visibleTokenBadges']
 		for i, visibleBadge in enumerate(visibleBadges):
@@ -235,6 +239,8 @@ class AI(threading.Thread):
 		result = self.sendCmd({'action': 'selectRace', 'sid': self.sid, 'position': chosenBadge.pos})
 		if result['result'] != 'ok':
 			raise BadFieldException('unknown error in select race %s' % result['result'])
+		print chosenBadge.race.name
+		print chosenBadge.specPower.name
 		return True
 	
 	def defend(self):
@@ -396,6 +402,8 @@ class AI(threading.Thread):
 		if self.canThrowDice(): self.sendCmd({'action': 'throwDice', 'sid': self.sid})
 		data = self.sendCmd({'action': 'conquer', 'sid': self.sid, 'regionId': chosenRegion.id})
 		ok = data['result'] == 'ok'
+		if data['result'] == 'badTokensNum':
+                        self.game.unsuccess = True
 		if not(ok or data['result'] == 'badTokensNum'):
 				raise BadFieldException('unknown error in conquer: %s' % data['result'])
 		if ok: self.conqueredRegions.append(conqdReg)
@@ -473,8 +481,10 @@ class AI(threading.Thread):
 		};
 		regions = self.currentTokenBadge.getRegions()
 		tokenBadge = self.currentTokenBadge
-		freeUnits = tokenBadge.totalTokensNum + tokenBadge.race.turnEndReinforcements(self)
 		print tokenBadge.totalTokensNum
+		if self.game.getLastState() != GAME_UNSUCCESSFULL_CONQUER and not self.game.unsuccess:
+                        tokenBadge.totalTokensNum += tokenBadge.race.turnEndReinforcements(self)
+                freeUnits = tokenBadge.totalTokensNum                       
 		print freeUnits
 		req = {'redeployment' : {}}
 		redplReqName = tokenBadge.specPower.redeployReqName
@@ -515,52 +525,7 @@ class AI(threading.Thread):
 			cmd[redplReqName] = convertRedeploymentRequest(req[redplReqName], code)
 		data = self.sendCmd(cmd)
 		if data['result'] != 'ok':
-                        if data['result'] == 'notEnoughTokensForRedeployment':
-                                regions = self.currentTokenBadge.getRegions()
-                                tokenBadge = self.currentTokenBadge
-                                freeUnits = tokenBadge.totalTokensNum + tokenBadge.race.turnEndReinforcements(self) - 4
-                                print tokenBadge.totalTokensNum
-                                print freeUnits
-                                req = {'redeployment' : {}}
-                                redplReqName = tokenBadge.specPower.redeployReqName
-                                code = codeTable[redplReqName] if redplReqName in codeTable else None
-                                if code: req[redplReqName] = {}			
-                                for region in regions: 
-                                        if code == ENCAMPMENTS_CODE:
-                                                req['encampments'][region.id] = 0
-                                        req['redeployment'][region.id] = 1
-                                        freeUnits -= 1
-                                self.calcDistances(regions)
-                                if code == HERO_CODE:
-                                        n = 2
-                                        for reg in sorted(regions, key=lambda x: x.needDef):
-                                                req['heroes'][reg.id] = 1
-                                                n -= 1
-                                                reg.needDef = 1
-                                                if not n: break
-                                elif code == FORTRESS_CODE and len(filter(lambda x: x.fortress, regions)) < 6:
-                                        maxNeedDef = 0
-                                        reg = None
-                                        for region in regions:
-                                                if region.needDef > maxNeedDef and not region.fortress:
-                                                        reg = region
-                                                        maxNeedDef = region.needDef
-                                        if reg:
-                                                req['fortified'][reg.id] = 1
-                                                reg.needDef = 1
-                                stratRegions = filter(lambda x : x.needDef > 1, regions)
-                                if len(stratRegions) > 2: regions = stratRegions
-                                if freeUnits:
-                                        distributeUnits(regions, freeUnits, req['redeployment'])
-                                if code == ENCAMPMENTS_CODE:
-                                        distributeUnits(regions, 5, req['encampments'])
-                                redeployRequest = convertRedeploymentRequest(req['redeployment'], REDEPLOYMENT_CODE)
-                                cmd = {'action': 'redeploy', 'sid': self.sid, 'regions': redeployRequest}
-                                if code: 
-                                        cmd[redplReqName] = convertRedeploymentRequest(req[redplReqName], code)
-                                data = self.sendCmd(cmd)
-                        else:
-                                raise BadFieldException('unknown error in redeploy %s' % data['result'])
+                        raise BadFieldException('unknown error in redeploy %s' % data['result'])
 
 	def getNextAct(self):
 		defendingPlayer = self.game.defendingInfo['playerId'] if self.game.defendingInfo else None
@@ -577,9 +542,10 @@ class AI(threading.Thread):
                         print "select friend"
 			return self.selectFriend
 		if self.currentTokenBadge:
-			self.conquerableRegions = self.getConquerableRegions()
-			if self.game.state == GAME_UNSUCCESSFULL_CONQUER or\
+			self.conquerableRegions = self.getConquerableRegions()  
+			if self.game.unsuccess or self.game.state == GAME_UNSUCCESSFULL_CONQUER or\
 				(not len(self.conquerableRegions) and self.game.checkStage(GAME_REDEPLOY, self)):
+                                self.game.unsuccess = False
                                 print "redeploy"
 				return self.redeploy
 			if self.canUseDragon():

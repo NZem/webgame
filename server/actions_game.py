@@ -50,7 +50,7 @@ def act_selectRace(data):
 	user.tokensInHand = tokensNum + addUnits
 	chosenBadge.inDecline = False
 	chosenBadge.bonusMoney = 0
-	chosenBadge.totalTokensNum = tokensNum #+ addUnits
+	chosenBadge.totalTokensNum = tokensNum + addUnits
 	chosenBadge.specPowNum = races.specialPowerList[specialPowerId].bonusNum
 	chosenBadge.pos = None
 	dbi.flush(chosenBadge)
@@ -107,6 +107,7 @@ def act_conquer(data):
 	unitPrice = max(unitPrice, 1)
 	if unitsNum < unitPrice:
 		dbi.updateHistory(user, GAME_UNSUCCESSFULL_CONQUER, user.currentTokenBadge.id)
+		tokenBadge.totalTokensNum += callRaceMethod(tokenBadge.raceId, 'turnEndReinforcements')
 		return {'result': 'badTokensNum', 'dice': dice}
 	clearFromRace(regState)					# Not sure if it's necessary
 	victimBadgeId = regState.tokenBadgeId
@@ -151,7 +152,8 @@ def act_redeploy(data):
 	if not tokenBadge: raise BadFieldException('badStage')
 	checkStage(GAME_REDEPLOY, user)
 	raceId, specialPowerId = tokenBadge.raceId, tokenBadge.specPowId
-	tokenBadge.totalTokensNum += callRaceMethod(raceId, 'turnEndReinforcements', user)
+	if user.game.getLastState() != GAME_UNSUCCESSFULL_CONQUER:
+                tokenBadge.totalTokensNum += callRaceMethod(raceId, 'turnEndReinforcements', user)
 	unitsNum = tokenBadge.totalTokensNum
 	if not unitsNum: raise BadFieldException('noTokensForRedeployment')
 	if not tokenBadge.regions:
