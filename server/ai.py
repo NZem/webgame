@@ -110,6 +110,8 @@ class TokenBadge:
 	def getRegions(self, defReg = None):
 		return filter(lambda x: x.tokenBadgeId == self.id and (not defReg or not x.isAdjacent(defReg)),
 			self.game.map.regions)
+		#return filter(lambda x: x.ownerId == self.owner and (not defReg or not x.isAdjacent(defReg)),
+		#	self.game.map.regions)
 		
 	def isNeighbor(self, region):
 		return len(filter(lambda x: x.isAdjacent(region), self.getRegions())) > 0
@@ -393,6 +395,9 @@ class AI(threading.Thread):
 
 	def conquer(self):
 		regions = self.conquerableRegions
+		if not len(regions):
+                      self.game.unsuccess = True
+                      return
 		calcRegPrior = lambda x: self.getRegionPrice(x) + 5*(x.ownerId == self.id) - self.currentTokenBadge.regBonus(x)
 		self.calcDistances(regions)
 		if self.currentTokenBadge and len(self.currentTokenBadge.getRegions()) and\
@@ -485,6 +490,12 @@ class AI(threading.Thread):
 			'encampments' : ENCAMPMENTS_CODE
 		};
 		regions = self.currentTokenBadge.getRegions()
+		if not len(regions):
+                       cmd = {'action': 'redeploy', 'sid': self.sid, 'regions': []}
+                       data = self.sendCmd(cmd)
+                       if data['result'] != 'ok':
+                                raise BadFieldException('unknown error in redeploy %s' % data['result'])
+                       return
 		tokenBadge = self.currentTokenBadge
 		print tokenBadge.totalTokensNum
 		if self.game.getLastState() != GAME_UNSUCCESSFULL_CONQUER and not self.game.unsuccess:
