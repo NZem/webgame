@@ -276,15 +276,19 @@ class AI(threading.Thread):
 		data = self.sendCmd({'action': 'enchant', 'sid': self.sid, 
 			'regionId': self.enchantableRegions[0].id})
 		if data['result'] != 'ok':
-			raise BadFieldException('unknown error in enchant %s' % data['result'])
-		self.enchantUsed = True
+                        self.game.unsuccess = True
+			#raise BadFieldException('unknown error in enchant %s' % data['result'])
+		else:
+                        self.enchantUsed = True
 
 	def dragonAttack(self):
 		region = max(self.conquerableRegions, key=lambda x: x.tokensNum)
 		data = self.sendCmd({'action': 'dragonAttack', 'sid': self.sid, 'regionId': region.id})
 		if data['result'] != 'ok':
-			raise BadFieldException('unknown error in dragon attack %s' % data['result'])
-		self.dragonUsed = True
+                        self.game.unsuccess = True
+			#raise BadFieldException('unknown error in dragon attack %s' % data['result'])
+                else:
+                        self.dragonUsed = True
 
 	def shouldFinishTurn(self):
 		return self.game.checkStage(GAME_FINISH_TURN, self)
