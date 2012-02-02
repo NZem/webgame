@@ -224,9 +224,9 @@ class AI(threading.Thread):
 			self.game.state = gameState['lastEvent'] if gameState['state'] == GAME_START or gameState['state'] == GAME_PROCESSING else gameState['state']
 			self.game.turn = gameState['currentTurn']
 		self.game.defendingInfo = gameState['defendingInfo'] if 'defendingInfo' in gameState else None
-		if 'friendsInfo' in gameState and 'friendId' in gameState['friendsInfo'] and\
-				gameState['friendsInfo']['friendId'] == self.id:
-				self.masterId = gameState['friendsInfo']['diplomatId']
+		if 'friendInfo' in gameState and 'friendId' in gameState['friendInfo'] and\
+				gameState['friendInfo']['friendId'] == self.id:
+				self.masterId = gameState['friendInfo']['diplomatId']
 		else:
 			self.masterId = None 
 
@@ -266,7 +266,8 @@ class AI(threading.Thread):
 		return tBadge and tBadge.specPower.canDecline(self, False) and\
 			self.game.checkStage(GAME_DECLINE, self) and\
 				(not len (self.getConquerableRegions()) or\
-				tBadge.totalTokensNum - len(tBadge.getRegions()) < 5)
+				tBadge.totalTokensNum - len(tBadge.getRegions()) < 5 and\
+                                 self.game.turn != self.game.map.turnsNum - 1)
 				
 
 	def decline(self):

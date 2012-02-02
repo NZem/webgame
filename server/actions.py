@@ -16,7 +16,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from checkFields import *
 from actions_game import *
 from misc import *
-from ai import AI
+from ai_new import AI
 
 def act_register(data):
 	username = data['username']

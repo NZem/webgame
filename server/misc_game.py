@@ -246,7 +246,7 @@ def getGameState(game):
 
 	friendsInfo = getFriendsInfo(game)
 	if friendsInfo:
-		result['friendsInfo'] = friendsInfo
+		result['friendInfo'] = friendsInfo
 		
 	result['map'] = getMapState(game.map.id, game.id)
 	playerAttrs = ['id', 'name', 'isReady', 'inGame', 'coins', 'tokensInHand']

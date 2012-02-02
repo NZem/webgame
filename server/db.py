@@ -112,7 +112,10 @@ class Game(Base):
 
 	def getLastState(self):
 		if (len(self.history)):
-			return self.history[-1].state
+                        possible_state = self.history[-1].state
+                        if (possible_state == misc.GAME_DEFEND):
+                                return self.history[-2].state
+                        return possible_state
 		else:
 			return self.state
 	

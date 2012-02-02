@@ -325,7 +325,10 @@ createGameByState = function(gameState)
 		Client.currentUser.gameId = undefined;
 		Interface.changeOnLeave();
 		msg = '***FINISH GAME***\n';
-		statistics = gameState.players; //gameState['statistics'];
+		if (gameState.players.length > 0)
+			statistics = gameState.players; //gameState['statistics'];
+		else
+			statistics = gameState['statistics'];
 		statistics.sort(function(a, b) { 
 			return (a.coins > b.coins) ? -1 : 1}); // || a.coins == b.coins && a.regions > b.regions
 		for (var  i = 0; i < statistics.length; ++i)
