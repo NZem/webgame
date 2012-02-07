@@ -172,7 +172,7 @@ class AI(threading.Thread):
 	def getGameState(self):
 		data = self.sendCmd({'action': 'getGameState', 'gameId': self.gameId})
 		gameState = data['gameState']
-		if 'ended' in gameState:
+		if gameState['state'] == GAME_ENDED:
 			self.game.state = GAME_ENDED
 			return
 		map_ = None
@@ -301,15 +301,17 @@ class AI(threading.Thread):
 			raise BadFieldException('unknown error in finish turn %s' % data['result'])
 		result = ''
 		if 'ended' in data: #game ended
-			result += '***FINISH GAME***\n'
-			result += 'Game id: %d\n' % self.game.id
+			#result += '***FINISH GAME***\n'
+			#result += 'Game id: %d\n' % self.game.id
 			statistics = data['statistics']
 			statistics = sorted(statistics, key = itemgetter('coins', 'regions'), 
 				reverse = True)
 			for stat in statistics:
 				result += 'Name: %s, coins: %d, regions: %d\n' % (stat['username'], 
 					stat['coins'], stat['regions'])
-			result += '**************\n'
+			#result += '**************\n'
+			result += '\n'
+			self.logFile.write(result)
 		else:
 			result = 'Game id: %d, turn: %d\n' % (self.game.id, self.game.turn)
 			result += 'Player id: %d\n' % self.id
@@ -319,7 +321,7 @@ class AI(threading.Thread):
 				result += '%s: %d\n' % (statistics[0], statistics[1])
 				totalCoins += statistics[1]
 			result += 'Income coins: %d\n\n\n' % totalCoins
-		self.logFile.write(result)
+		#self.logFile.write(result)
 		self.conqueredRegions = list()
 		self.dragonUsed = False #regions
 		self.enchantUsed = False

@@ -16,7 +16,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from checkFields import *
 from actions_game import *
 from misc import *
-from ai_new import AI
 
 def act_register(data):
 	username = data['username']
@@ -163,7 +162,7 @@ def act_resetServer(data):
 		misc.TEST_RANDSEED = data['randseed']
 	else:
 		misc.TEST_RANDSEED = 21425364547
-	random.seed(misc.TEST_RANDSEED)
+	#random.seed(misc.TEST_RANDSEED)
 	dbi.clear()
 	if not misc.TEST_MODE: createDefaultMaps()
 	#user = User('user', '123456')
