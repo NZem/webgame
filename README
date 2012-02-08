@@ -1,3 +1,24 @@
 Turn-based strategy.
 Authors: Zemlyannikova Natalia, Podolsky Leonid, Vasilyeva Elena.
 FEFU, C8403a, 2011
+
+System Requirements:
+Python 2.7
+sql-alchemy 0.7.3
+Paste 1.7.5.1
+
+
+List of scripts to run:
+
+small_worlds.py (_srv.bat) - runs game server on localhost:8080
+
+testFromFiles.py <beginningNumber> <endingNumber> <directory> (_run_tests_from_files.bat) - running tests in <directory>
+from "test_beginningNumber" till "test_endingNumber"
+
+ai_dispatcher.py <gameId> <aiNum> (_ai.bat) - <aiNum> simple artificial intelligences will join to game with game id <gameId>
+When there were no parameters script will be getting game list permanently. AI will join to games with AI reqiremet number > 0. 
+
+ai_dispatcher_new.py <gameId> <aiNum> (_ai -new.bat) - <aiNum> advanced artificial intelligences will join to game with game id <gameId>
+When there were no parameters script will be getting game list permanently. AI will join to games with AI reqiremet number > 0.
+
+ai_competition.py (_ai - competition.bat) - runs both simple and advanced AI to compare
